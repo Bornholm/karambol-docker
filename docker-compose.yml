@@ -1,0 +1,29 @@
+version: "2"
+services:
+  db:
+    image: mariadb:10.1
+    environment:
+      MYSQL_ROOT_PASSWORD: absolutly_not_safe_password
+      MYSQL_DATABASE: karambol
+      MYSQL_USER: karambol
+      MYSQL_PASSWORD: karambol
+    volumes:
+      - ./data/db:/var/lib/mysql
+  web:
+    build:
+      context: containers/web
+      args:
+          - HTTP_PROXY=${HTTP_PROXY}
+          - HTTPS_PROXY=${HTTPS_PROXY}
+          - http_proxy=${http_proxy}
+          - https_proxy=${https_proxy}
+          - KARAMBOL_REPOSITORY=https://github.com/Bornholm/karambol.git
+          - KARAMBOL_TAG=develop
+    environment:
+      MYSQL_DATABASE: karambol
+      MYSQL_USER: karambol
+      MYSQL_PASSWORD: karambol
+    ports:
+      - 8888:80
+    links:
+      - db
