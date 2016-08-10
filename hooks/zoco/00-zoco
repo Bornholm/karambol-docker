@@ -1,0 +1,35 @@
+#!/bin/bash
+
+apk add --no-cache php-ftp tar gzip && rm -rf /var/cache/apk/*
+
+cat <<EOF > composer.local.json
+  {
+    "repositories": [
+      {
+        "url": "https://forge.cadoles.com/wpetit/karambol-plugin-zoco.git",
+        "type": "vcs"
+      }
+    ],
+    "require": {
+      "bornholm/karambol-plugin-zoco": "${ZOCO_VERSION}"
+    }
+  }
+EOF
+
+./composer update
+
+cp vendor/bornholm/karambol-plugin-zoco/config/zoco.yml config/local.d/
+sed -i 's/127\.0\.0\.1/elasticsearch/' config/local.d/zoco.yml
+
+cat <<EOF > config/local.d/_settings.yml
+settings:
+  enable_plugin_zoco: true
+EOF
+
+./script/install
+./script/migrate
+
+./script/console zoco-plugin:index:create
+./script/console zoco-plugin:boamp:fetch-archives
+./script/console zoco-plugin:boamp:extract-archives
+./script/console zoco-plugin:boamp:parse-xml

@@ -36,10 +36,10 @@ if [ ! -e .initialized ]; then
   mkdir -p public/cache
   chown -R nobody: public/cache
 
+  [ ! -z "${STARTUP_HOOKS}" ] && run-parts "${STARTUP_HOOKS}"
+
   touch .initialized
 
 fi
-
-run-parts /hooks
 
 /usr/bin/supervisord

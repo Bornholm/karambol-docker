@@ -1,4 +1,5 @@
 FROM alpine:3.3
+#FROM multiarch/alpine:armhf-v3.3
 
 RUN apk --no-cache add mariadb mariadb-client && rm -rf /var/cache/apk/*
 

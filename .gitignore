@@ -1,4 +1,2 @@
 /data/*
 !/data/.gitkeep
-/hooks/*/*
-!/hooks/web/00-hello-world

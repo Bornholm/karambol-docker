@@ -1,0 +1,21 @@
+version: "2"
+services:
+  web:
+    environment:
+      KARAMBOL_ADMIN_PASSWORD: not_safe_either
+      STARTUP_HOOKS: /hooks/zoco
+      ZOCO_VERSION: dev-develop
+    volumes:
+      - ./data/web/data:/opt/karambol/data
+    links:
+      - elasticsearch
+  elasticsearch:
+    build:
+      context: ./containers/elasticsearch
+      args:
+          - HTTP_PROXY=${HTTP_PROXY}
+          - HTTPS_PROXY=${HTTPS_PROXY}
+          - http_proxy=${http_proxy}
+          - https_proxy=${https_proxy}
+    volumes:
+      - ./data/elasticsearch:/var/elasticsearch

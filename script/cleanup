@@ -1,4 +1,4 @@
 #!/bin/bash
 
-rm -rf data/db/*
-docker-compose rm --all
+rm -rf data
+docker-compose $@ rm --all

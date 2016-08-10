@@ -10,7 +10,7 @@ services:
           - https_proxy=${https_proxy}
     volumes:
       - ./data/db:/var/lib/mysql
-      - ./hooks/db:/hooks
+      - ./hooks:/hooks
     environment:
       MYSQL_ROOT_PASSWORD: absolutly_not_safe
       MYSQL_DATABASE: karambol
@@ -32,8 +32,9 @@ services:
       MYSQL_PASSWORD: karambol
       KARAMBOL_ADMIN_USER: admin
       KARAMBOL_ADMIN_PASSWORD: not_safe_either
+      STARTUP_HOOKS: /hooks/zoco
     volumes:
-      - ./hooks/web:/hooks
+      - ./hooks:/hooks
     ports:
       - 8888:80
     links:

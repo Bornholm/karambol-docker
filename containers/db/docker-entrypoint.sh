@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ ! -e /var/lib/mysql/ibdata1 ]; then
+if [ ! -e .initialized ]; then
 
   echo "Initialising MariaDB instance..."
   mysql_install_db --user=mysql
@@ -30,6 +30,10 @@ if [ ! -e /var/lib/mysql/ibdata1 ]; then
   sleep 2
 
   sed -i 's/bind-address = 127.0.0.1//' /etc/mysql/my.cnf
+
+  [ ! -z "${STARTUP_HOOKS}" ] && run-parts "${STARTUP_HOOKS}"
+
+  touch .initialized
 
 fi
 
