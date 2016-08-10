@@ -1,14 +1,21 @@
 version: "2"
 services:
   db:
-    image: mariadb:10.1
+    build:
+      context: containers/db
+      args:
+          - HTTP_PROXY=${HTTP_PROXY}
+          - HTTPS_PROXY=${HTTPS_PROXY}
+          - http_proxy=${http_proxy}
+          - https_proxy=${https_proxy}
+    volumes:
+      - ./data/db:/var/lib/mysql
+      - ./hooks/db:/hooks
     environment:
-      MYSQL_ROOT_PASSWORD: absolutly_not_safe_password
+      MYSQL_ROOT_PASSWORD: absolutly_not_safe
       MYSQL_DATABASE: karambol
       MYSQL_USER: karambol
       MYSQL_PASSWORD: karambol
-    volumes:
-      - ./data/db:/var/lib/mysql
   web:
     build:
       context: containers/web
@@ -23,6 +30,10 @@ services:
       MYSQL_DATABASE: karambol
       MYSQL_USER: karambol
       MYSQL_PASSWORD: karambol
+      KARAMBOL_ADMIN_USER: admin
+      KARAMBOL_ADMIN_PASSWORD: not_safe_either
+    volumes:
+      - ./hooks/web:/hooks
     ports:
       - 8888:80
     links:

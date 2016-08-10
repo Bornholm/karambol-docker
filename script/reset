@@ -1,0 +1,4 @@
+#!/bin/bash
+
+./script/cleanup
+docker-compose build --no-cache

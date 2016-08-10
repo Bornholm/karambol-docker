@@ -1,4 +1,5 @@
 FROM alpine:3.3
+#FROM multiarch:armhf-v3.3
 
 ARG KARAMBOL_REPOSITORY=https://github.com/Bornholm/karambol.git
 ARG KARAMBOL_TAG=develop

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "[HOOK] This is a hook example executed before the container startup !"
