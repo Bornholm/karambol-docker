@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ ! -e .initialized ]; then
+if [ ! -f "/root/.initialized" ]; then
 
   echo "Initialising MariaDB instance..."
   mysql_install_db --user=mysql
@@ -33,7 +33,7 @@ if [ ! -e .initialized ]; then
 
   [ ! -z "${STARTUP_HOOKS}" ] && run-parts "${STARTUP_HOOKS}"
 
-  touch .initialized
+  touch "/root/.initialized"
 
 fi
 

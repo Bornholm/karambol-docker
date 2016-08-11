@@ -22,7 +22,7 @@ while [ "$?" != 0 ]; do
   nc -zv db 3306 2>/dev/null 1>&2
 done
 
-if [ ! -e .initialized ]; then
+if [ ! -f "/root/.initialized" ]; then
 
   echo "Initializing Karambol..."
 
@@ -38,7 +38,7 @@ if [ ! -e .initialized ]; then
 
   [ ! -z "${STARTUP_HOOKS}" ] && run-parts "${STARTUP_HOOKS}"
 
-  touch .initialized
+  touch "/root/.initialized"
 
 fi
 

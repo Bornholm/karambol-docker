@@ -33,6 +33,10 @@ services:
       KARAMBOL_ADMIN_USER: admin
       KARAMBOL_ADMIN_PASSWORD: not_safe_either
       STARTUP_HOOKS: /hooks/zoco
+      HTTP_PROXY: ${HTTP_PROXY}
+      HTTPS_PROXY: ${HTTPS_PROXY}
+      http_proxy: ${http_proxy}
+      https_proxy: ${https_proxy}
     volumes:
       - ./hooks:/hooks
     ports:

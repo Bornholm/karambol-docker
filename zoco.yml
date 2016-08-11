@@ -2,7 +2,6 @@ version: "2"
 services:
   web:
     environment:
-      KARAMBOL_ADMIN_PASSWORD: not_safe_either
       STARTUP_HOOKS: /hooks/zoco
       ZOCO_VERSION: dev-develop
     volumes:
@@ -19,3 +18,5 @@ services:
           - https_proxy=${https_proxy}
     volumes:
       - ./data/elasticsearch:/var/elasticsearch
+    ports:
+      - 9200:9200
