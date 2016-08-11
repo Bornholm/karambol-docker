@@ -1,7 +1,11 @@
 #!/bin/bash
 
+# Script d'installation de Zoco dans l'environnement Karambol
+
+# Installation des dépendances systèmes
 apk add --no-cache php-ftp tar gzip && rm -rf /var/cache/apk/*
 
+# Ajout de la dépendances vers Zoco dans le manifeste des paquets PHP de Karambol
 cat <<EOF > composer.local.json
   {
     "repositories": [
@@ -16,23 +20,42 @@ cat <<EOF > composer.local.json
   }
 EOF
 
+# Mise à jour des dépendances PHP
 ./composer update
 
+# Intégration du plugin Zoco à l'installation Karambol
 cp vendor/bornholm/karambol-plugin-zoco/config/zoco.yml config/local.d/
+
+# Modification de la configuration de Zoco pour pointer vers le conteneur Elasticsearch
 sed -i 's/127\.0\.0\.1/elasticsearch/' config/local.d/zoco.yml
 
+# Création du script de mise à jour des données du BOAMP
+cat <<EOF > /etc/periodic/daily/fetch-latest-boamp
+#!/bin/sh
+cd /opt/karambol
+./script/console zoco-plugin:boamp:fetch-archives --force-sync --newer-than=P1D
+./script/console zoco-plugin:boamp:extract-archives --newer-than=P1D
+http_proxy= https_proxy= HTTP_PROXY= HTTPS_PROXY= ./script/console zoco-plugin:boamp:parse-xml --newer-than=P1D --bulk-size=500
+EOF
+
+chmod a+x /etc/periodic/daily/fetch-latest-boamp
+
+# Mise en place de la tâche journalière de synchro des données du BOAMP
+cat <<EOF > /etc/supervisor.d/cron.ini
+[program:cron]
+command = /usr/sbin/crond -f
+user = root
+autostart = true
+EOF
+
+# Activation du plugin Zoco
 cat <<EOF > config/local.d/_settings.yml
 settings:
   enable_plugin_zoco: true
 EOF
 
-cat <<EOF > script/fetch-latest-boamp
-#!/bin/sh
-./script/console zoco-plugin:boamp:fetch-archives --newer-than=P1D
-./script/console zoco-plugin:boamp:extract-archives --newer-than=P1D
-http_proxy= https_proxy= HTTP_PROXY= HTTPS_PROXY= ./script/console zoco-plugin:boamp:parse-xml --newer-than=P1D
-EOF
-
-chmod +x script/fetch-latest-boamp
-
+# Mise à jour des assets Karambol
 ./script/install
+
+# Initialisation de l'index Elasticsearch
+http_proxy= https_proxy= HTTP_PROXY= HTTPS_PROXY= ./script/console zoco-plugin:index:create
