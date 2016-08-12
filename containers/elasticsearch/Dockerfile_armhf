@@ -26,6 +26,8 @@ ADD elasticsearch.yml /opt/elasticsearch-$ELASTICSEARCH_VERSION/config/elasticse
 ADD docker-entrypoint.sh /root/docker-entrypoint.sh
 RUN chmod +x /root/docker-entrypoint.sh
 
+ENV PATH=${PATH}:/opt/elasticsearch-$ELASTICSEARCH_VERSION/bin
+
 EXPOSE 9200
 
 CMD ["/root/docker-entrypoint.sh"]

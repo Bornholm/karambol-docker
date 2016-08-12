@@ -1,6 +1,0 @@
-path:
-  data: /var/elasticsearch
-network:
-  host: _site_
-script:
-  inline: true
