@@ -5,10 +5,10 @@ services:
       context: containers/db
       dockerfile: Dockerfile_x64
       args:
-          - HTTP_PROXY=${HTTP_PROXY}
-          - HTTPS_PROXY=${HTTPS_PROXY}
-          - http_proxy=${http_proxy}
-          - https_proxy=${https_proxy}
+        - HTTP_PROXY=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+        - http_proxy=${http_proxy}
+        - https_proxy=${https_proxy}
     volumes:
       - ./data/db:/var/lib/mysql
       - ./hooks:/hooks
@@ -22,12 +22,14 @@ services:
       context: containers/web
       dockerfile: Dockerfile_x64
       args:
-          - HTTP_PROXY=${HTTP_PROXY}
-          - HTTPS_PROXY=${HTTPS_PROXY}
-          - http_proxy=${http_proxy}
-          - https_proxy=${https_proxy}
-          - KARAMBOL_REPOSITORY=https://github.com/Bornholm/karambol.git
-          - KARAMBOL_TAG=develop
+        - HTTP_PROXY=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+        - http_proxy=${http_proxy}
+        - https_proxy=${https_proxy}
+        - KARAMBOL_REPOSITORY=https://github.com/Bornholm/karambol.git
+        - KARAMBOL_TAG=develop
+    depends_on:
+      - db
     environment:
       MYSQL_DATABASE: karambol
       MYSQL_USER: karambol
