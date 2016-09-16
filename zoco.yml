@@ -8,6 +8,9 @@ services:
       - ./data/web/data:/opt/karambol/data
     links:
       - elasticsearch
+    depends_on:
+      - db
+      - elasticsearch
   elasticsearch:
     build:
       context: ./containers/elasticsearch
