@@ -10,7 +10,7 @@ cat <<EOF > composer.local.json
   {
     "repositories": [
       {
-        "url": "https://forge.cadoles.com/wpetit/karambol-plugin-zoco.git",
+        "url": "https://github.com/Bornholm/karambol-plugin-zoco.git",
         "type": "vcs"
       }
     ],
