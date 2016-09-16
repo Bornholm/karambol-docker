@@ -1,0 +1,72 @@
+FROM alpine:3.3
+
+ARG KARAMBOL_REPOSITORY=https://github.com/Bornholm/karambol.git
+ARG KARAMBOL_TAG=develop
+
+RUN apk --no-cache add php-fpm \
+  php-pdo php-mysql php-pdo_mysql \
+  php-openssl php-mcrypt php-zlib php-phar php-dom php-ctype \
+  php-json php-curl php-xml php-opcache php-apcu \
+  nginx curl supervisor git bash \
+  && rm -rf /var/cache/apk/*
+
+ADD supervisor.ini /etc/supervisor.d/supervisor.ini
+
+RUN mkdir -p /etc/nginx
+RUN mkdir -p /var/run/php-fpm
+RUN mkdir -p /var/log/supervisor
+RUN mkdir -p /opt
+
+RUN rm /etc/nginx/nginx.conf
+ADD nginx.conf /etc/nginx/nginx.conf
+ADD nginx-karambol.conf /etc/nginx/sites-enabled/karambol.conf
+
+WORKDIR /opt
+RUN git clone "$KARAMBOL_REPOSITORY" karambol
+WORKDIR /opt/karambol
+RUN git checkout "$KARAMBOL_TAG"
+
+RUN ./script/install
+
+ADD docker-entrypoint.sh /root/docker-entrypoint.sh
+RUN chmod +x /root/docker-entrypoint.sh
+
+RUN mkdir /opt/karambol/init
+ADD init.sh /opt/karambol/init/00-karambol
+RUN chmod +x /opt/karambol/init/00-karambol
+
+EXPOSE 80
+
+CMD ["/root/docker-entrypoint.sh"]
+# Script d'installation de Zoco dans l'environnement Karambol
+
+ARG ZOCO_PLUGIN_VERSION=dev-develop
+
+# Installation des dépendances systèmes
+RUN apk add --no-cache php-ftp tar gzip sed && rm -rf /var/cache/apk/*
+
+# Ajout de la dépendances vers Zoco dans le manifeste des paquets PHP de Karambol
+ADD extensions/zoco/composer.local.json /opt/karambol/composer.local.json
+RUN sed -i "s/\${ZOCO_PLUGIN_VERSION}/$ZOCO_PLUGIN_VERSION/" /opt/karambol/composer.local.json
+
+# Mise à jour des dépendances PHP
+RUN ./composer update bornholm/karambol-plugin-zoco
+
+# Intégration du plugin Zoco à l'installation Karambol
+RUN cp vendor/bornholm/karambol-plugin-zoco/config/zoco.yml config/local.d/
+
+# Modification de la configuration de Zoco pour pointer vers le conteneur Elasticsearch
+RUN sed -i 's/127\.0\.0\.1/elasticsearch/' config/local.d/zoco.yml
+
+# Création du script de mise à jour des données du BOAMP
+ADD extensions/zoco/fetch-latest-boamp.sh /etc/periodic/daily/fetch-latest-boamp
+RUN chmod a+x /etc/periodic/daily/fetch-latest-boamp
+
+# Mise en place de la tâche journalière de synchro des données du BOAMP
+ADD extensions/zoco/cron.ini /etc/supervisor.d/cron.ini
+
+# Activation du plugin Zoco
+ADD extensions/zoco/_settings.yml /opt/karambol/config/local.d/_settings.yml
+
+ADD extensions/zoco/init.sh /opt/karambol/init/10-zoco
+RUN chmod +x /opt/karambol/init/10-zoco

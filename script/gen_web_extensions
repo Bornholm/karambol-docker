@@ -1,0 +1,14 @@
+#!/bin/bash
+
+
+WEB_DOCKERFILE=containers/web/Dockerfile
+
+for extension_file in $(ls containers/web/extensions/*/Dockerfile); do
+  extension_name=$(basename "$(dirname "$extension_file")")
+  dest_dockerfile="containers/web/Dockerfile_$extension_name"
+  echo "Generating Dockerfile for extension '$extension_name'..."
+  cat "$WEB_DOCKERFILE" > "$dest_dockerfile"
+  cat "$extension_file" >> "$dest_dockerfile"
+done
+
+echo "Done"

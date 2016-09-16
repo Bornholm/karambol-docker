@@ -1,9 +1,10 @@
 version: "2"
 services:
   web:
-    environment:
-      STARTUP_HOOKS: /hooks/zoco
-      ZOCO_VERSION: dev-develop
+    build:
+      dockerfile: Dockerfile_zoco
+      args:
+        ZOCO_PLUGIN_VERSION: dev-develop
     volumes:
       - ./data/web/data:/opt/karambol/data
     links:
@@ -14,7 +15,7 @@ services:
   elasticsearch:
     build:
       context: ./containers/elasticsearch
-      dockerfile: Dockerfile_x64
+      dockerfile: Dockerfile
       args:
           - HTTP_PROXY=${HTTP_PROXY}
           - HTTPS_PROXY=${HTTPS_PROXY}

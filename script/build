@@ -1,4 +1,5 @@
 #!/bin/bash
 
 ./script/cleanup $@
+./script/gen_web_extensions
 docker-compose $@ build --no-cache

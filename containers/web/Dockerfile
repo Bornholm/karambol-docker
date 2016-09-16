@@ -1,5 +1,4 @@
 FROM alpine:3.3
-#FROM multiarch/alpine:armhf-v3.3
 
 ARG KARAMBOL_REPOSITORY=https://github.com/Bornholm/karambol.git
 ARG KARAMBOL_TAG=develop
@@ -7,7 +6,7 @@ ARG KARAMBOL_TAG=develop
 RUN apk --no-cache add php-fpm \
   php-pdo php-mysql php-pdo_mysql \
   php-openssl php-mcrypt php-zlib php-phar php-dom php-ctype \
-  php-json php-curl php-xml php-opcache \
+  php-json php-curl php-xml php-opcache php-apcu \
   nginx curl supervisor git bash \
   && rm -rf /var/cache/apk/*
 
@@ -26,10 +25,15 @@ WORKDIR /opt
 RUN git clone "$KARAMBOL_REPOSITORY" karambol
 WORKDIR /opt/karambol
 RUN git checkout "$KARAMBOL_TAG"
+
 RUN ./script/install
 
 ADD docker-entrypoint.sh /root/docker-entrypoint.sh
 RUN chmod +x /root/docker-entrypoint.sh
+
+RUN mkdir /opt/karambol/init
+ADD init.sh /opt/karambol/init/00-karambol
+RUN chmod +x /opt/karambol/init/00-karambol
 
 EXPOSE 80
 

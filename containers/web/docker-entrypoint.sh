@@ -15,31 +15,14 @@ database:
   host: db
 EOF
 
-nc -zv db 3306 2>/dev/null 1>&2
-while [ "$?" != 0 ]; do
+while ! (echo > /dev/tcp/db/3306) >/dev/null 2>&1; do
   echo "Waiting for database..."
-  sleep 2
-  nc -zv db 3306 2>/dev/null 1>&2
-done
+  sleep 2;
+done;
 
-if [ ! -f "/root/.initialized" ]; then
-
-  echo "Initializing Karambol..."
-
-  ./script/migrate
-  echo "y\n" | ./script/console karambol:rules:seed
-  ./script/console karambol:account:create "${KARAMBOL_ADMIN_USER}" "${KARAMBOL_ADMIN_PASSWORD}"
-  ./script/console karambol:account:promote "${KARAMBOL_ADMIN_USER}"
-
-
-  # Create and update files ACL
-  mkdir -p public/cache
-  chown -R nobody: public/cache
-
-  [ ! -z "${STARTUP_HOOKS}" ] && run-parts "${STARTUP_HOOKS}"
-
-  touch "/root/.initialized"
-
+if [ ! -f ".initialized" ]; then
+  run-parts /opt/karambol/init
+  touch ".initialized"
 fi
 
 /usr/bin/supervisord

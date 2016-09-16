@@ -1,0 +1,11 @@
+{
+  "repositories": [
+    {
+      "url": "https://github.com/Bornholm/karambol-plugin-zoco.git",
+      "type": "vcs"
+    }
+  ],
+  "require": {
+    "bornholm/karambol-plugin-zoco": "${ZOCO_PLUGIN_VERSION}"
+  }
+}
