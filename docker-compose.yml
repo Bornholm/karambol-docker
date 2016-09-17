@@ -11,7 +11,6 @@ services:
         - https_proxy=${https_proxy}
     volumes:
       - ./data/db:/var/lib/mysql
-      - ./hooks:/hooks
     environment:
       MYSQL_ROOT_PASSWORD: absolutly_not_safe
       MYSQL_DATABASE: karambol
@@ -41,8 +40,6 @@ services:
       HTTPS_PROXY: ${HTTPS_PROXY}
       http_proxy: ${http_proxy}
       https_proxy: ${https_proxy}
-    volumes:
-      - ./hooks:/hooks
     ports:
       - 8888:80
     links:
