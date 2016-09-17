@@ -67,6 +67,7 @@ ADD extensions/zoco/cron.ini /etc/supervisor.d/cron.ini
 
 # Activation du plugin Zoco
 ADD extensions/zoco/_settings.yml /opt/karambol/config/local.d/_settings.yml
+RUN chown nobody: /opt/karambol/config/local.d/_settings.yml
 
 ADD extensions/zoco/init.sh /opt/karambol/init/10-zoco
 RUN chmod +x /opt/karambol/init/10-zoco
