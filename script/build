@@ -2,4 +2,4 @@
 
 ./script/cleanup $@
 ./script/gen_web_extensions
-docker-compose $@ build
+docker-compose $@ build --no-cache

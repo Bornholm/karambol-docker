@@ -8,4 +8,4 @@ fi
 
 [ -d /container-lifecycle/start ] && run-parts /container-lifecycle/start
 
-mysqld_safe
+mysqld_safe --datadir='/var/lib/mysql'

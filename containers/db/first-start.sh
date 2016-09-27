@@ -6,7 +6,7 @@ mysql_install_db --user=mysql
 # Only listen on localhost when installing
 sed -i 's/\[mysqld\]/\[mysqld\]\nbind-address = 127.0.0.1/' /etc/mysql/my.cnf
 
-/usr/bin/mysqld_safe &
+/usr/bin/mysqld_safe --datadir='/var/lib/mysql' &
 
 nc -zv 127.0.0.1 3306 2>/dev/null 1>&2
 while [ "$?" != 0 ]; do

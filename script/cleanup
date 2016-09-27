@@ -2,4 +2,4 @@
 
 docker-compose $@ down
 rm -rf data
-docker-compose $@ rm --all
+docker-compose $@ rm --all -v
