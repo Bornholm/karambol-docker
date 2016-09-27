@@ -1,28 +1,11 @@
 #!/bin/bash
 
-# Create/Update local configuration
-cat <<EOF > config/local.d/local.yml
-debug: false
-
-logger:
-  level: WARNING
-
-database:
-  driver: pdo_mysql
-  user: $MYSQL_USER
-  password: $MYSQL_PASSWORD
-  dbname: $MYSQL_DATABASE
-  host: db
-EOF
-
-while ! (echo > /dev/tcp/db/3306) >/dev/null 2>&1; do
-  echo "Waiting for database..."
-  sleep 2;
-done;
-
-if [ ! -f ".initialized" ]; then
-  run-parts /opt/karambol/init
-  touch ".initialized"
+if [ ! -f "/container-lifecycle/.flags/first-start" ]; then
+  [ -d /container-lifecycle/first-start ] && run-parts /container-lifecycle/first-start
+  mkdir -p "/container-lifecycle/.flags"
+  touch "/container-lifecycle/.flags/first-start"
 fi
+
+[ -d /container-lifecycle/start ] && run-parts /container-lifecycle/start
 
 /usr/bin/supervisord

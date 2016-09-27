@@ -31,9 +31,13 @@ RUN ./script/install
 ADD docker-entrypoint.sh /root/docker-entrypoint.sh
 RUN chmod +x /root/docker-entrypoint.sh
 
-RUN mkdir /opt/karambol/init
-ADD init.sh /opt/karambol/init/00-karambol
-RUN chmod +x /opt/karambol/init/00-karambol
+RUN mkdir -p /container-lifecycle/first-start
+ADD first-start.sh /container-lifecycle/first-start/00-karambol
+RUN chmod +x /container-lifecycle/first-start/00-karambol
+
+RUN mkdir -p /container-lifecycle/start
+ADD start.sh /container-lifecycle/start/00-karambol
+RUN chmod +x /container-lifecycle/start/00-karambol
 
 EXPOSE 80
 

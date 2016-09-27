@@ -10,7 +10,8 @@ services:
         - http_proxy=${http_proxy}
         - https_proxy=${https_proxy}
     volumes:
-      - ./data/db:/var/lib/mysql
+      - ./data/db/mysql:/var/lib/mysql
+      - ./data/db/container-lifecycle/flags:/container-lifecycle/.flags
     environment:
       MYSQL_ROOT_PASSWORD: absolutly_not_safe
       MYSQL_DATABASE: karambol
@@ -40,6 +41,9 @@ services:
       HTTPS_PROXY: ${HTTPS_PROXY}
       http_proxy: ${http_proxy}
       https_proxy: ${https_proxy}
+    volumes:
+      - ./data/web/container-lifecycle/flags:/container-lifecycle/.flags
+      - ./data/web/config:/opt/karambol/config/local.d
     ports:
       - 8888:80
     links:
