@@ -21,10 +21,11 @@ settings:
 EOF
 fi
 
+# Rétablissement des droits sur les settings
 chown nobody: config/local.d/_settings.yml
 
 # Migration de la BDD
-./script/migrate
+./bin/migrate
 
 # Création de l'index
-http_proxy= https_proxy= HTTP_PROXY= HTTPS_PROXY= ./script/cli zoco-plugin:index:create
+http_proxy= https_proxy= HTTP_PROXY= HTTPS_PROXY= ./bin/cli zoco-plugin:index:create

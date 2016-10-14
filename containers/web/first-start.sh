@@ -25,12 +25,12 @@ while ! (echo > /dev/tcp/db/3306) >/dev/null 2>&1; do
   sleep 2;
 done;
 
-script/install
-script/migrate
+bin/install
+bin/migrate
 
-echo "y\n" | ./script/cli karambol:rules:seed
-./script/cli karambol:account:create "${KARAMBOL_ADMIN_USER}" "${KARAMBOL_ADMIN_PASSWORD}"
-./script/cli karambol:account:promote "${KARAMBOL_ADMIN_USER}"
+echo "y\n" | ./bin/cli karambol:rules:seed
+./bin/cli karambol:account:create "${KARAMBOL_ADMIN_USER}" "${KARAMBOL_ADMIN_PASSWORD}"
+./bin/cli karambol:account:promote "${KARAMBOL_ADMIN_USER}"
 
 # Create and update files ACL
 mkdir -p ./public/cache

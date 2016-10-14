@@ -26,7 +26,7 @@ RUN git clone "$KARAMBOL_REPOSITORY" karambol
 WORKDIR /opt/karambol
 RUN git checkout "$KARAMBOL_TAG"
 
-RUN ./script/install
+RUN ./bin/install
 
 ADD docker-entrypoint.sh /root/docker-entrypoint.sh
 RUN chmod +x /root/docker-entrypoint.sh
