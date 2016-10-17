@@ -7,11 +7,12 @@ while ! (echo > /dev/tcp/db/3306) >/dev/null 2>&1; do
   sleep 2;
 done;
 
-echo "Clearing cache..."
-./bin/cli karambol:cache:clear
+echo "Clearing cache and fixing permissions..."
+bin/cli karambol:cache:clear
+chown -R nobody:nogroup public/cache data/cache
 
 echo "Linking assets..."
-./bin/cli karambol:assets:link
+bin/cli karambol:assets:link
 
 echo "Updating database schema..."
-./bin/migrate
+bin/migrate

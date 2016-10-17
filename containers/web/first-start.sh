@@ -28,10 +28,6 @@ done;
 bin/install
 bin/migrate
 
-echo "y\n" | ./bin/cli karambol:rules:seed
-./bin/cli karambol:account:create "${KARAMBOL_ADMIN_USER}" "${KARAMBOL_ADMIN_PASSWORD}"
-./bin/cli karambol:account:promote "${KARAMBOL_ADMIN_USER}"
-
-# Create and update files ACL
-mkdir -p ./public/cache
-chown -R nobody: ./public/cache
+echo "y\n" | bin/cli karambol:rules:seed
+bin/cli karambol:account:create "${KARAMBOL_ADMIN_USER}" "${KARAMBOL_ADMIN_PASSWORD}"
+bin/cli karambol:account:promote "${KARAMBOL_ADMIN_USER}"
